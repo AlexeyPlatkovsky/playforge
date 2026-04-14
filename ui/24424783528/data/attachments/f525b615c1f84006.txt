@@ -1,0 +1,1 @@
+INFO: Click on btn (#btn)
