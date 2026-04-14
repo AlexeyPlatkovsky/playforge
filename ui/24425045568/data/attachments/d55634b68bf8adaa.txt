@@ -1,0 +1,1 @@
+INFO: Click on products (a[href='/products'])

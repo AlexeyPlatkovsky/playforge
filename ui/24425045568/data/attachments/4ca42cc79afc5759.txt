@@ -1,0 +1,2 @@
+INFO: Fill on searchInput (#search_product)
+INFO: Click on searchButton (#submit_search)

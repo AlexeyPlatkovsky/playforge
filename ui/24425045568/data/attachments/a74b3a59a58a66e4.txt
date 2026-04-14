@@ -1,0 +1,2 @@
+INFO: Fill on getByPlaceholder(Your email address) (footer >> getByPlaceholder(Your email address))
+INFO: Click on submit (#subscribe)
