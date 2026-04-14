@@ -4,6 +4,7 @@ import { env } from "./framework/config/env";
 
 export default defineConfig({
   testDir: "./tests",
+  globalSetup: "./tests/global-setup.ts",
   fullyParallel: false,
   reporter: [
     ["list"],
