@@ -1,11 +1,11 @@
 ---
 name: refactor
-description: Rules and practices for safely refactoring shared framework code. Use when restructuring xLocator, xComponent, xPage, xLogger, fixtures, assertions, or ESLint enforcement.
+description: TDD-first rules for safely refactoring shared framework code. Use when restructuring xLocator, xComponent, xPage, xLogger, fixtures, assertions, or ESLint enforcement.
 ---
 
-## When To Use This Skill
+## When To Use
 
-Use for any change that:
+Any change that:
 
 - Restructures shared framework code under `framework/`
 - Changes public methods, fixture contracts, helper signatures, or config defaults
@@ -14,7 +14,7 @@ Use for any change that:
 
 Do not use this skill for isolated page/component tweaks or doc-only changes.
 
-## TDD-First Rule
+## TDD Rule
 
 Before changing production code:
 
@@ -23,7 +23,7 @@ Before changing production code:
 3. Change production code.
 4. Rerun the protecting test before broadening validation.
 
-Protecting tests belong in `tests/unit/`.
+Protecting tests live in `tests/unit/`.
 
 ## High-Risk Areas
 
@@ -36,13 +36,6 @@ Protecting tests belong in `tests/unit/`.
 | `framework/fixtures/` | Worker lifecycle, shared state, server startup |
 | `eslint-plugin-xframework/` | Build-time enforcement across the whole repo |
 
-## Validation After Refactoring
+## Validation
 
-Run in this order:
-
-1. `npx tsc --noEmit`
-2. `npx playwright test tests/unit`
-3. `npx eslint .`
-4. The narrowest relevant UI smoke spec if user-visible behavior changed
-
-If the toolchain is not installed, state exactly what was skipped.
+Use the `validate` skill for the command matrix. After the protecting test passes, broaden only as the change surface requires.

@@ -26,9 +26,13 @@ description: Rules for writing and placing Playwright tests in this project. Use
 - Never hardcode credentials or secrets; read them from environment variables and fail fast if missing.
 - Construct page objects near the top of the test unless navigation order makes that impossible.
 - Keep locators in pages/components, not specs.
-- Prefer targeted unit validation before UI runs.
-- For framework refactoring, follow `refactor`.
-- For materially revised UI automation spanning pages/components/specs, run `review-automation-code`.
+
+## Related References
+
+- Page / component conventions: `docs/conventions/page-objects.md`, `docs/conventions/components.md`
+- Framework refactors: `refactor`
+- Review after multi-file UI changes: `review-automation-code`
+- Validation: `validate`
 
 ## Review Checklist For Generated Specs
 

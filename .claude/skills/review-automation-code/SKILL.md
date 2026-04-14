@@ -11,11 +11,10 @@ Review the changed automation code as a system, not file-by-file.
 
 - Read the changed UI specs and the pages/components they use.
 - Read relevant fixtures, assertions, and support helpers when the change touches shared setup, URLs, or credentials.
-- Use these skills as the source of truth:
-  - `create-page-object`
-  - `create-component`
+- Source of truth:
+  - `docs/conventions/page-objects.md`
+  - `docs/conventions/components.md`
   - `write-test`
-  - `ai-write-test`
   - `task-ready`
 
 ## What To Flag

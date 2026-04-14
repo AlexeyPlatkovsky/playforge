@@ -1,13 +1,12 @@
----
-name: create-component
-description: Scaffold a reusable xComponent with a stable root and field-initialized child locators. Use for nested sections, widgets, forms, and reusable page fragments.
----
+# Component Conventions
+
+Reference for any code that creates or edits `xComponent` subclasses.
 
 ## Location
 
 Reusable components live in `components/`.
 
-## Component Template
+## Template
 
 ```ts
 import { xComponent } from '../framework/core/xComponent';
@@ -40,4 +39,4 @@ export class LoginFormComponent extends xComponent {
 
 - Scope selectors through the component root.
 - Prefer selectors that survive copy and layout changes.
-- Use CSS selectors that can be chained reliably under `this.root`.
+- Use CSS selectors that can chain reliably under `this.root`.
