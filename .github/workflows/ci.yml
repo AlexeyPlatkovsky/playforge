@@ -12,7 +12,6 @@ on:
       - "pages/**"
       - "tests/**"
       - ".env.example"
-      - ".nvmrc"
       - "eslint.config.js"
       - "package.json"
       - "package-lock.json"
@@ -28,7 +27,6 @@ on:
       - "pages/**"
       - "tests/**"
       - ".env.example"
-      - ".nvmrc"
       - "eslint.config.js"
       - "package.json"
       - "package-lock.json"
@@ -36,25 +34,31 @@ on:
       - "tsconfig.json"
 
 permissions:
-  contents: read
+  contents: write
   issues: write
   pull-requests: write
+  pages: write
+  id-token: write
 
 jobs:
   verify:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-jammy
     env:
       BASE_URL: https://automationexercise.com
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - name: Cache npm
+        uses: actions/cache@v4
         with:
-          node-version-file: ".nvmrc"
-          cache: npm
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+      - name: Install Java for Allure CLI
+        run: apt-get update -qq && apt-get install -y -q default-jre-headless
       - name: Install dependencies
         run: npm ci
-      - name: Install Playwright browser
-        run: npx playwright install --with-deps chromium
       - name: Typecheck
         run: npm run typecheck
       - name: Lint
@@ -181,6 +185,33 @@ jobs:
           path: .ci-reports/ui/allure-report
           if-no-files-found: ignore
           retention-days: 14
+      - name: Prepare GitHub Pages deployment
+        id: pages
+        if: always()
+        shell: bash
+        run: |
+          PAGES_BASE="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
+          mkdir -p .gh-pages/unit/${{ github.run_id }}
+          mkdir -p .gh-pages/ui/${{ github.run_id }}
+
+          if [ -d .ci-reports/unit/allure-report ]; then
+            cp -r .ci-reports/unit/allure-report/. .gh-pages/unit/${{ github.run_id }}/
+            echo "unit_url=${PAGES_BASE}/unit/${{ github.run_id }}/" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ -d .ci-reports/ui/allure-report ]; then
+            cp -r .ci-reports/ui/allure-report/. .gh-pages/ui/${{ github.run_id }}/
+            echo "ui_url=${PAGES_BASE}/ui/${{ github.run_id }}/" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .gh-pages
+          keep_files: true
+          allow_empty_commit: false
       - name: Write test summary
         if: always()
         shell: bash
@@ -189,11 +220,11 @@ jobs:
           UNIT_RESULT: ${{ steps.unit.outputs.result }}
           UNIT_DURATION: ${{ steps.unit.outputs.duration_human }}
           UNIT_PLAYWRIGHT_URL: ${{ steps.unit-playwright-report.outputs.artifact-url }}
-          UNIT_ALLURE_URL: ${{ steps.unit-allure-report.outputs.artifact-url }}
+          UNIT_ALLURE_URL: ${{ steps.pages.outputs.unit_url }}
           UI_RESULT: ${{ steps.ui.outputs.result }}
           UI_DURATION: ${{ steps.ui.outputs.duration_human }}
           UI_PLAYWRIGHT_URL: ${{ steps.ui-playwright-report.outputs.artifact-url }}
-          UI_ALLURE_URL: ${{ steps.ui-allure-report.outputs.artifact-url }}
+          UI_ALLURE_URL: ${{ steps.pages.outputs.ui_url }}
         run: |
           format_links() {
             local playwright_url="$1"
@@ -240,11 +271,11 @@ jobs:
           UNIT_RESULT: ${{ steps.unit.outputs.result }}
           UNIT_DURATION: ${{ steps.unit.outputs.duration_human }}
           UNIT_PLAYWRIGHT_URL: ${{ steps.unit-playwright-report.outputs.artifact-url }}
-          UNIT_ALLURE_URL: ${{ steps.unit-allure-report.outputs.artifact-url }}
+          UNIT_ALLURE_URL: ${{ steps.pages.outputs.unit_url }}
           UI_RESULT: ${{ steps.ui.outputs.result }}
           UI_DURATION: ${{ steps.ui.outputs.duration_human }}
           UI_PLAYWRIGHT_URL: ${{ steps.ui-playwright-report.outputs.artifact-url }}
-          UI_ALLURE_URL: ${{ steps.ui-allure-report.outputs.artifact-url }}
+          UI_ALLURE_URL: ${{ steps.pages.outputs.ui_url }}
         with:
           script: |
             const marker = '<!-- ci-test-summary -->';
