@@ -9,22 +9,312 @@ on:
       - "refactor/**"
       - "docs/**"
       - "ai/**"
+    paths:
+      - ".github/workflows/ci.yml"
+      - "assertions/**"
+      - "eslint-plugin-xframework/**"
+      - "framework/**"
+      - "pages/**"
+      - "tests/**"
+      - ".env.example"
+      - ".nvmrc"
+      - "eslint.config.js"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.ts"
+      - "tsconfig.json"
   pull_request:
+    paths:
+      - ".github/workflows/ci.yml"
+      - "assertions/**"
+      - "eslint-plugin-xframework/**"
+      - "framework/**"
+      - "pages/**"
+      - "tests/**"
+      - ".env.example"
+      - ".nvmrc"
+      - "eslint.config.js"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.ts"
+      - "tsconfig.json"
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
   verify:
     runs-on: ubuntu-latest
     env:
-      BASE_URL: http://127.0.0.1:3407
+      BASE_URL: https://automationexercise.com
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version-file: ".nvmrc"
           cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run test:unit
-      - run: npm run test:ui
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Run unit tests
+        id: unit
+        continue-on-error: true
+        shell: bash
+        run: |
+          format_duration() {
+            local total_seconds="$1"
+            printf '%dm %02ds' "$((total_seconds / 60))" "$((total_seconds % 60))"
+          }
+
+          start_epoch=$(date +%s)
+          rm -rf playwright-report allure-results test-results .ci-reports/unit
+          mkdir -p .ci-reports/unit
+
+          set +e
+          npm run test:unit
+          test_exit_code=$?
+          set -e
+
+          end_epoch=$(date +%s)
+          duration_seconds=$((end_epoch - start_epoch))
+          result="passed"
+
+          if [ "$test_exit_code" -ne 0 ]; then
+            result="failed"
+          fi
+
+          if [ -d playwright-report ]; then
+            mv playwright-report .ci-reports/unit/playwright-report
+          fi
+
+          if [ -d allure-results ] && [ -n "$(find allure-results -type f -print -quit)" ]; then
+            npx allure generate allure-results --clean -o .ci-reports/unit/allure-report
+          fi
+
+          {
+            echo "exit_code=$test_exit_code"
+            echo "result=$result"
+            echo "duration_seconds=$duration_seconds"
+            echo "duration_human=$(format_duration "$duration_seconds")"
+          } >> "$GITHUB_OUTPUT"
+
+          exit 0
+      - name: Upload unit Playwright report
+        id: unit-playwright-report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-playwright-report
+          path: .ci-reports/unit/playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload unit Allure report
+        id: unit-allure-report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-allure-report
+          path: .ci-reports/unit/allure-report
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Run UI tests
+        id: ui
+        continue-on-error: true
+        shell: bash
+        run: |
+          format_duration() {
+            local total_seconds="$1"
+            printf '%dm %02ds' "$((total_seconds / 60))" "$((total_seconds % 60))"
+          }
+
+          start_epoch=$(date +%s)
+          rm -rf playwright-report allure-results test-results .ci-reports/ui
+          mkdir -p .ci-reports/ui
+
+          set +e
+          npm run test:ui
+          test_exit_code=$?
+          set -e
+
+          end_epoch=$(date +%s)
+          duration_seconds=$((end_epoch - start_epoch))
+          result="passed"
+
+          if [ "$test_exit_code" -ne 0 ]; then
+            result="failed"
+          fi
+
+          if [ -d playwright-report ]; then
+            mv playwright-report .ci-reports/ui/playwright-report
+          fi
+
+          if [ -d allure-results ] && [ -n "$(find allure-results -type f -print -quit)" ]; then
+            npx allure generate allure-results --clean -o .ci-reports/ui/allure-report
+          fi
+
+          {
+            echo "exit_code=$test_exit_code"
+            echo "result=$result"
+            echo "duration_seconds=$duration_seconds"
+            echo "duration_human=$(format_duration "$duration_seconds")"
+          } >> "$GITHUB_OUTPUT"
+
+          exit 0
+      - name: Upload UI Playwright report
+        id: ui-playwright-report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-playwright-report
+          path: .ci-reports/ui/playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload UI Allure report
+        id: ui-allure-report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-allure-report
+          path: .ci-reports/ui/allure-report
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Write test summary
+        if: always()
+        shell: bash
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          UNIT_RESULT: ${{ steps.unit.outputs.result }}
+          UNIT_DURATION: ${{ steps.unit.outputs.duration_human }}
+          UNIT_PLAYWRIGHT_URL: ${{ steps.unit-playwright-report.outputs.artifact-url }}
+          UNIT_ALLURE_URL: ${{ steps.unit-allure-report.outputs.artifact-url }}
+          UI_RESULT: ${{ steps.ui.outputs.result }}
+          UI_DURATION: ${{ steps.ui.outputs.duration_human }}
+          UI_PLAYWRIGHT_URL: ${{ steps.ui-playwright-report.outputs.artifact-url }}
+          UI_ALLURE_URL: ${{ steps.ui-allure-report.outputs.artifact-url }}
+        run: |
+          format_links() {
+            local playwright_url="$1"
+            local allure_url="$2"
+            local links=()
+
+            if [ -n "$playwright_url" ]; then
+              links+=("[HTML report]($playwright_url)")
+            fi
+
+            if [ -n "$allure_url" ]; then
+              links+=("[Allure report]($allure_url)")
+            fi
+
+            if [ "${#links[@]}" -eq 0 ]; then
+              echo "No artifact"
+              return
+            fi
+
+            local joined_links="${links[0]}"
+
+            for link in "${links[@]:1}"; do
+              joined_links="$joined_links · $link"
+            done
+
+            echo "$joined_links"
+          }
+
+          {
+            echo "## Test summary"
+            echo
+            echo "| Test type | Result | Total time execution | Report link |"
+            echo "| --- | --- | --- | --- |"
+            echo "| Unit | ${UNIT_RESULT:-unknown} | ${UNIT_DURATION:-n/a} | $(format_links "$UNIT_PLAYWRIGHT_URL" "$UNIT_ALLURE_URL") |"
+            echo "| UI | ${UI_RESULT:-unknown} | ${UI_DURATION:-n/a} | $(format_links "$UI_PLAYWRIGHT_URL" "$UI_ALLURE_URL") |"
+            echo
+            echo "Run: [#${{ github.run_number }}](${RUN_URL})"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Comment PR with test summary
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/github-script@v9
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          UNIT_RESULT: ${{ steps.unit.outputs.result }}
+          UNIT_DURATION: ${{ steps.unit.outputs.duration_human }}
+          UNIT_PLAYWRIGHT_URL: ${{ steps.unit-playwright-report.outputs.artifact-url }}
+          UNIT_ALLURE_URL: ${{ steps.unit-allure-report.outputs.artifact-url }}
+          UI_RESULT: ${{ steps.ui.outputs.result }}
+          UI_DURATION: ${{ steps.ui.outputs.duration_human }}
+          UI_PLAYWRIGHT_URL: ${{ steps.ui-playwright-report.outputs.artifact-url }}
+          UI_ALLURE_URL: ${{ steps.ui-allure-report.outputs.artifact-url }}
+        with:
+          script: |
+            const marker = '<!-- ci-test-summary -->';
+            const issueNumber = context.issue.number;
+
+            function formatLinks(playwrightUrl, allureUrl) {
+              const links = [];
+
+              if (playwrightUrl) {
+                links.push(`[HTML report](${playwrightUrl})`);
+              }
+
+              if (allureUrl) {
+                links.push(`[Allure report](${allureUrl})`);
+              }
+
+              return links.length > 0 ? links.join(' · ') : 'No artifact';
+            }
+
+            const body = [
+              marker,
+              '## CI Test Summary',
+              '',
+              '| Test type | Result | Total time execution | Report link |',
+              '| --- | --- | --- | --- |',
+              `| Unit | ${process.env.UNIT_RESULT || 'unknown'} | ${process.env.UNIT_DURATION || 'n/a'} | ${formatLinks(process.env.UNIT_PLAYWRIGHT_URL, process.env.UNIT_ALLURE_URL)} |`,
+              `| UI | ${process.env.UI_RESULT || 'unknown'} | ${process.env.UI_DURATION || 'n/a'} | ${formatLinks(process.env.UI_PLAYWRIGHT_URL, process.env.UI_ALLURE_URL)} |`,
+              '',
+              `Run: [#${context.runNumber}](${process.env.RUN_URL})`
+            ].join('\n');
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              per_page: 100
+            });
+
+            const existingComment = comments.find((comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker));
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body
+              });
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body
+            });
+      - name: Fail workflow if a test suite failed
+        if: always()
+        shell: bash
+        env:
+          UNIT_CONCLUSION: ${{ steps.unit.conclusion }}
+          UNIT_EXIT_CODE: ${{ steps.unit.outputs.exit_code }}
+          UI_CONCLUSION: ${{ steps.ui.conclusion }}
+          UI_EXIT_CODE: ${{ steps.ui.outputs.exit_code }}
+        run: |
+          if [ "$UNIT_CONCLUSION" != "success" ] || [ "$UI_CONCLUSION" != "success" ] || [ "${UNIT_EXIT_CODE:-1}" != "0" ] || [ "${UI_EXIT_CODE:-1}" != "0" ]; then
+            echo "One or more test suites failed." >&2
+            exit 1
+          fi
