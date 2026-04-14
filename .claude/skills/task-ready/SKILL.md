@@ -26,10 +26,19 @@ Work through each item in order. Stop and fix before moving on if any step fails
 
 Use this report at task completion for T1, T2, and T3 work. T0 trivial tasks use the lighter report defined in `.claude/workflows/trivial.md` and do not need this section.
 
-1. Files created or updated (paths)
-2. Validation run and pass/fail/skipped
-3. Skills or workflow stages completed, skipped, or blocked
-4. Assumptions, risks, and unverified areas
-5. Any issues noticed outside task scope
+Start the report with the selected workflow name on its own line:
+
+`Workflow: <workflow path>`
+
+Then present the completion report as a markdown table:
+
+| Step | Skill or Subagent | Status | Evidence / Notes |
+|---|---|---|---|
+| Files changed | local implementation | completed | list created or updated paths |
+| Validation | `validate` | completed \| skipped \| blocked | commands run and pass/fail/skipped |
+| Automation review | `review-automation-code` or `n/a` | completed \| skipped \| blocked | findings summary or explicit reason not needed |
+| Workflow execution | selected workflow stages | completed \| skipped \| blocked | stages completed, skipped, or blocked |
+| Risks | local review | completed | assumptions, risks, and unverified areas |
+| Out-of-scope issues | local review | completed | issues noticed outside task scope, or `none` |
 
 A workflow may extend this list (e.g. `repair-test.md` adds failure-mode and re-run count). Never shrink it.

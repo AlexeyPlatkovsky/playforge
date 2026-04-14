@@ -1,0 +1,31 @@
+{
+  "name": "custom_playwright",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "app:serve": "node scripts/serve-smoke-app.mjs",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:unit && npm run test:ui",
+    "test:unit": "cross-env BASE_URL=http://127.0.0.1:3407 playwright test tests/unit --grep @unit",
+    "test:ui": "cross-env BASE_URL=http://127.0.0.1:3407 playwright test tests/ui --grep @ui",
+    "report:html": "playwright show-report",
+    "report:allure": "allure generate allure-results --clean -o allure-report"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.59.1",
+    "@types/node": "25.6.0",
+    "allure-commandline": "2.38.1",
+    "allure-playwright": "3.7.1",
+    "cross-env": "10.1.0",
+    "eslint": "10.2.0",
+    "globals": "17.5.0",
+    "typescript": "6.0.2",
+    "typescript-eslint": "8.58.2",
+    "zod": "4.3.6"
+  }
+}
