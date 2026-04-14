@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - main
-      - "feature/**"
-      - "fix/**"
-      - "refactor/**"
-      - "docs/**"
-      - "ai/**"
     paths:
       - ".github/workflows/ci.yml"
       - "assertions/**"
@@ -24,6 +19,7 @@ on:
       - "playwright.config.ts"
       - "tsconfig.json"
   pull_request:
+    types: [opened, synchronize, reopened]
     paths:
       - ".github/workflows/ci.yml"
       - "assertions/**"
@@ -42,6 +38,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write
 
 jobs:
   verify:
@@ -237,7 +234,6 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Comment PR with test summary
         if: always() && github.event_name == 'pull_request'
-        continue-on-error: true
         uses: actions/github-script@v9
         env:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -252,7 +248,12 @@ jobs:
         with:
           script: |
             const marker = '<!-- ci-test-summary -->';
-            const issueNumber = context.issue.number;
+            const issueNumber = context.payload.pull_request?.number;
+
+            if (!issueNumber) {
+              core.setFailed('Pull request number is missing from the event payload.');
+              return;
+            }
 
             function formatLinks(playwrightUrl, allureUrl) {
               const links = [];
