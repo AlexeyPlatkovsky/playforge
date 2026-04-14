@@ -13,7 +13,7 @@ Use for non-trivial work in a single area that does not touch framework core, fi
    - Test rules → `write-test`
    - UI automation conventions → `docs/conventions/page-objects.md`, `docs/conventions/components.md`
 5. Run validation via `validate`.
-6. Material UI changes under `pages/`, `components/`, or `tests/ui/` → run `review-automation-code`.
+6. Material UI changes under `pages/`, `components/`, `tests/ui/`, or `tests/framework/` → run `review-automation-code`.
 7. Run `task-ready`.
 8. Report per `task-ready §Reporting Format`.
 

@@ -38,3 +38,10 @@ Environment parsing lives in [`framework/config`](./framework/config). Required 
 ## Architecture
 
 The current project layout and the planned DSL layers are summarized in [docs/architecture/overview.md](./docs/architecture/overview.md).
+
+## Authoring And Migration
+
+- [Authoring with the DSL](./docs/guides/authoring-with-the-dsl.md)
+- [Selenium author migration checklist](./docs/migration/selenium-authors-checklist.md)
+- [Side-by-side migration examples](./docs/migration/custom-webelement-side-by-side.md)
+- [Hardening and readiness notes](./docs/architecture/hardening-and-readiness.md)

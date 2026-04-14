@@ -8,7 +8,7 @@ Canonical, vendor-neutral contract for any coding agent working in `custom_playw
 - Framework core: `framework/`
 - Assertion helpers: `assertions/`
 - App model: `pages/`, `components/`
-- Tests: `tests/ui/`, `tests/unit/`
+- Tests: `tests/ui/`, `tests/framework/`, `tests/unit/`
 - Lint rules: `eslint-plugin-xframework/`
 - Docs: `docs/` (conventions, guides, architecture, plans, reviews, migration, cases)
 

@@ -9,7 +9,7 @@ Work through each item in order. Stop and fix before moving on if any step fails
 
 - [ ] **Validation scope selected**: use `validate`
 - [ ] **Selected verification passes**: run the chosen checks or explain why they could not run
-- [ ] **Automation design review**: if `pages/`, `components/`, or `tests/ui/` changed materially, run `review-automation-code`
+- [ ] **Automation design review**: if `pages/`, `components/`, `tests/ui/`, or `tests/framework/` changed materially, run `review-automation-code`
 - [ ] **No secrets**: no credentials or tokens introduced in tracked files
 - [ ] **Docs updated**: if behavior, setup, configuration, or workflow changed
 - [ ] **Scope clean**: no unrelated cleanup bundled in

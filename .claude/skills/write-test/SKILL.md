@@ -9,6 +9,7 @@ description: Rules for writing and placing Playwright tests in this project. Use
 |---|---|
 | Framework unit tests | `tests/unit/` |
 | UI specs | `tests/ui/` |
+| Framework browser specs | `tests/framework/` |
 | Page objects | `pages/` |
 | Components | `components/` |
 
@@ -21,6 +22,7 @@ description: Rules for writing and placing Playwright tests in this project. Use
 ## Rules
 
 - Prefer the project fixture and assertion helpers over direct `@playwright/test` imports.
+- Use `framework/fixtures/app.fixture` for browser specs unless a lower-level runner import is required for framework-only coverage.
 - Do not use raw `page.goto`, `page.locator`, or `page.getByRole` in test files.
 - Do not use raw `expect(...)` in tests when a helper already covers the assertion.
 - Never hardcode credentials or secrets; read them from environment variables and fail fast if missing.
@@ -30,6 +32,7 @@ description: Rules for writing and placing Playwright tests in this project. Use
 ## Related References
 
 - Page / component conventions: `docs/conventions/page-objects.md`, `docs/conventions/components.md`
+- End-to-end authoring examples: `docs/guides/authoring-with-the-dsl.md`
 - Framework refactors: `refactor`
 - Review after multi-file UI changes: `review-automation-code`
 - Validation: `validate`
