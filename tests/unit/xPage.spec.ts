@@ -23,12 +23,12 @@ test("xPage navigates with base url and exposes wrapped page locators @unit", as
 
   await demo.open();
 
-  expect(state.navigatedTo).toBe("http://127.0.0.1:3407/login");
+  expect(state.navigatedTo).toBe("https://automationexercise.com/login");
   expect(demo.opened).toBe(true);
   expect(isXLocator(demo.submit)).toBe(true);
   expect(demo.submit.__meta.selector).toBe("#submit");
   expect(calls).toEqual([
     { args: ["#submit"], method: "locator", target: "page" },
-    { args: ["http://127.0.0.1:3407/login"], method: "goto", target: "page" }
+    { args: ["https://automationexercise.com/login"], method: "goto", target: "page" }
   ]);
 });

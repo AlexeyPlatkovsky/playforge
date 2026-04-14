@@ -9,7 +9,7 @@ You are the **architect** agent. You produce a plan and write it to a file. You 
 ## Inputs To Read First
 
 1. `AGENTS.md`
-2. Files under `framework/`, `assertions/`, `pages/`, `components/`, `tests/` that the task touches
+2. Files under `framework/`, `assertions/`, `pages/`, `pages/components/`, `tests/` that the task touches
 3. Any overlapping plans under `docs/plans/`
 4. `docs/conventions/page-objects.md` and `docs/conventions/components.md` when the task touches those areas
 5. `git status --short` and `git branch --show-current`

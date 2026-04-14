@@ -6,9 +6,9 @@ Use this guide when adding pages, components, browser specs, or assertion covera
 
 | Concern | Location | Reference example |
 |---|---|---|
-| Navigable pages | `pages/` | `pages/LoginPage.ts`, `pages/DashboardPage.ts` |
-| Reusable scoped components | `components/` | `components/LoginFormComponent.ts`, `components/UsersTableComponent.ts` |
-| App-level browser specs | `tests/ui/` | `tests/ui/login.spec.ts`, `tests/ui/dashboard.spec.ts` |
+| Navigable pages | `pages/` | `pages/HomePage.ts`, `pages/ProductsPage.ts`, `pages/ProductDetailsPage.ts` |
+| Reusable scoped components | `pages/components/` | `pages/components/SiteHeaderComponent.ts`, `pages/components/ProductsCatalogComponent.ts` |
+| App-level browser specs | `tests/ui/` | `tests/ui/home.spec.ts`, `tests/ui/products.spec.ts` |
 | Browser-facing framework specs | `tests/framework/` | `tests/framework/assertions.spec.ts`, `tests/framework/fixture.spec.ts` |
 | Framework/unit coverage | `tests/unit/` | `tests/unit/xLocator.spec.ts`, `tests/unit/eslintRules.spec.ts` |
 
@@ -19,7 +19,7 @@ Use this guide when adding pages, components, browser specs, or assertion covera
 - Nested reusable areas become component fields, not inheritance.
 - Dynamic locators stay as methods that return `xLocator`.
 
-`DashboardPage` shows the intended shape: page fields for dashboard-level controls, a nested `UsersTableComponent`, and business actions such as `searchUsers()` and `inviteUser()`.
+`ProductsPage` shows the intended shape: page fields for page-owned controls, nested components for the header, brand sidebar, catalog, and footer, plus business actions such as `searchProducts()` and `openBrand()`.
 
 ## Components
 
@@ -28,7 +28,7 @@ Use this guide when adding pages, components, browser specs, or assertion covera
 - Parameterized locators are methods, not stored fields.
 - Components never call `page.locator(...)` or hold a raw `Page`.
 
-`UsersTableComponent.rowByName(name)` is the reference pattern for parameterized row lookup. It keeps the search scoped to the component root and lets the spec stay at the level of user intent.
+`ProductsCatalogComponent.cardByName(name)` is the reference pattern for parameterized product lookup. It keeps the search scoped to the component root and lets the spec stay at the level of user intent.
 
 ## Browser specs
 
@@ -37,7 +37,7 @@ Use this guide when adding pages, components, browser specs, or assertion covera
 - Route interactions through page and component APIs rather than raw `page.goto`, `page.locator`, or `page.getByRole`.
 - Use `@ui` in browser-facing titles and `@unit` in framework tests.
 
-`tests/ui/dashboard.spec.ts` is the reference suite for:
+`tests/ui/products.spec.ts` is the reference suite for:
 
 - nested component interactions
 - parameterized locators

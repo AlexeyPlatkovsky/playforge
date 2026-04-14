@@ -56,7 +56,7 @@ module.exports = tseslint.config(
     }
   },
   {
-    files: ["components/**/*.ts"],
+    files: ["pages/components/**/*.ts"],
     plugins: { xframework },
     rules: {
       "xframework/no-page-locator-in-components": "error"
@@ -64,6 +64,7 @@ module.exports = tseslint.config(
   },
   {
     files: ["pages/**/*.ts"],
+    ignores: ["pages/components/**/*.ts"],
     plugins: { xframework },
     rules: {
       "xframework/page-must-implement-is-opened": "error"

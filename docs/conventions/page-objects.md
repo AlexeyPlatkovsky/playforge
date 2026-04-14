@@ -19,14 +19,15 @@ Pages are never components and never extend `xComponent`.
 ```ts
 import { expect } from '@playwright/test';
 import { xPage } from '../framework/core/xPage';
-import { LoginFormComponent } from '../components/LoginFormComponent';
+import { SiteHeaderComponent } from './components/SiteHeaderComponent';
 
-export class LoginPage extends xPage {
-  readonly path = '/login';
-  readonly form = new LoginFormComponent(this.$('#login-form'));
+export class ProductsPage extends xPage {
+  readonly path = '/products';
+  readonly header = new SiteHeaderComponent(this.$('header'));
+  readonly searchInput = this.$('#search_product');
 
   async isOpened(): Promise<void> {
-    await expect(this.form.root).toBeVisible();
+    await expect(this.searchInput).toBeVisible();
   }
 }
 ```

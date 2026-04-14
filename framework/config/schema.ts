@@ -13,7 +13,7 @@ const optionalString = z.preprocess(
 );
 
 const envSchema = z.object({
-  BASE_URL: z.url(),
+  BASE_URL: optionalString.transform((value) => value ?? "https://automationexercise.com").pipe(z.url()),
   HIGHLIGHT: z.enum(["0", "1"]).default("0"),
   TEST_PASSWORD: optionalString,
   TEST_USERNAME: optionalString

@@ -7,7 +7,7 @@ Canonical, vendor-neutral contract for any coding agent working in `custom_playw
 - TypeScript + Playwright Component-DSL framework
 - Framework core: `framework/`
 - Assertion helpers: `assertions/`
-- App model: `pages/`, `components/`
+- App model: `pages/` with reusable components under `pages/components/`
 - Tests: `tests/ui/`, `tests/framework/`, `tests/unit/`
 - Lint rules: `eslint-plugin-xframework/`
 - Docs: `docs/` (conventions, guides, architecture, plans, reviews, migration, cases)
@@ -119,4 +119,4 @@ Load only when the task touches the matching area.
 | Reference | Used by |
 |---|---|
 | `docs/conventions/page-objects.md` | anyone creating or editing `pages/**` |
-| `docs/conventions/components.md` | anyone creating or editing `components/**` |
+| `docs/conventions/components.md` | anyone creating or editing `pages/components/**` |

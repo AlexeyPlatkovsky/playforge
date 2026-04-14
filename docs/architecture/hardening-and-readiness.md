@@ -1,26 +1,26 @@
 # Hardening And Readiness
 
-Recorded on `2026-04-14` after the `cpw-004` and `cpw-005` reference-flow implementation work.
+Recorded on `2026-04-14` after moving the reference browser flows to `https://automationexercise.com/`.
 
 ## Parallel Stress Pass
 
 Command:
 
 ```bash
-BASE_URL=http://127.0.0.1:3407 npx playwright test tests/ui tests/framework --grep @ui --workers=4 --repeat-each=3
+npx playwright test tests/ui tests/framework --grep @ui --workers=4 --repeat-each=3
 ```
 
 Result:
 
-- 36 browser tests passed
+- 33 browser tests passed
 - 4 workers
 - 3 repeats per spec
-- total wall time: about 9.5s
+- total wall time: about 39.8s
 - Playwright HTML, trace, video, and Allure wiring remained stable during the repeated run
 
 Interpretation:
 
-- The current page/component DSL, fixture server, and smoke app are stable under file-level parallel execution at the current suite size.
+- The current page/component DSL and Playwright configuration are stable under file-level parallel execution at the current suite size against `automationexercise.com`.
 - No flake was observed in the repeated browser pass.
 
 ## `xLocator` Proxy Benchmark
@@ -28,7 +28,7 @@ Interpretation:
 Command:
 
 ```bash
-BASE_URL=http://127.0.0.1:3407 npx playwright test tests/unit/xLocator.benchmark.spec.ts
+npx playwright test tests/unit/xLocator.benchmark.spec.ts
 ```
 
 Benchmark shape:
@@ -40,9 +40,9 @@ Measured averages:
 
 | Case | Average |
 |---|---|
-| raw locator chain | 1.486 ms |
-| wrapped `xLocator` chain | 25.173 ms |
-| `rawLocator(...)` fallback from `xLocator` | 1.407 ms |
+| raw locator chain | 1.600 ms |
+| wrapped `xLocator` chain | 31.311 ms |
+| `rawLocator(...)` fallback from `xLocator` | 1.726 ms |
 
 Guidance:
 
@@ -59,7 +59,7 @@ The bd database was read-only in this session because another process held the e
 | highlight refinements | defer | Current highlighting is sufficient for the reference flows; no failure evidence justified changing it now. |
 | slow-mo support | defer | No repeated-run or trace evidence showed a debugging gap that warrants a runtime contract change. |
 | TestRail tag parsing | defer | The repo has no TestRail integration path yet, so adding parsing now would be speculative. |
-| remote-grid support | defer | Current config and smoke app are local-runner oriented; grid support should be tracked separately once a real target exists. |
+| remote-grid support | defer | The suite now targets a public site directly, but there is still no real grid requirement or support contract in the repo. |
 | dynamic component roots | keep deferred | The new example flows were expressible with fixed scoped roots, so a broader component-root contract is still unproven. |
 | `softGroup` on non-assertion exceptions | keep current behavior | Non-assertion failures should still stop execution immediately; only assertion-mode switching is intentionally softened. |
 | `xPage.waitForReady()` hook | defer | `isOpened()` remains sufficient for the current pages and adding another readiness hook would be speculative. |

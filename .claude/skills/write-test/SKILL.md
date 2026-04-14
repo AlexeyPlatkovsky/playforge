@@ -11,7 +11,7 @@ description: Rules for writing and placing Playwright tests in this project. Use
 | UI specs | `tests/ui/` |
 | Framework browser specs | `tests/framework/` |
 | Page objects | `pages/` |
-| Components | `components/` |
+| Components | `pages/components/` |
 
 ## Tagging
 

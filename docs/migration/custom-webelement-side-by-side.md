@@ -7,11 +7,11 @@ This document shows representative habit swaps between the older Java-style mode
 Representative Java original:
 
 ```java
-public class DashboardPage extends BasePage {
-    @FindBy(css = "[data-testid='user-search']")
+public class ProductsPage extends BasePage {
+    @FindBy(id = "search_product")
     private WebElement searchInput;
 
-    public void searchUsers(String value) {
+    public void searchProducts(String value) {
         searchInput.sendKeys(value);
     }
 }
@@ -20,26 +20,27 @@ public class DashboardPage extends BasePage {
 TypeScript DSL:
 
 ```ts
-export class DashboardPage extends xPage {
-  readonly path = "/dashboard";
-  readonly searchInput = this.$("[data-testid='user-search']");
+export class ProductsPage extends xPage {
+  readonly path = "/products";
+  readonly searchInput = this.$("#search_product");
 
-  async searchUsers(term: string): Promise<void> {
+  async searchProducts(term: string): Promise<void> {
     await this.searchInput.fill(term);
+    await this.searchButton.click();
   }
 }
 ```
 
-See the real implementation in `pages/DashboardPage.ts`.
+See the real implementation in `pages/ProductsPage.ts`.
 
 ## Reusable Regions Become Components
 
 Representative Java original:
 
 ```java
-public class UsersTable extends CustomWebElement {
-    public WebElement rowByName(String name) {
-        return root.$x(".//tr[td[normalize-space()='" + name + "']]");
+public class ProductsCatalog extends CustomWebElement {
+    public WebElement cardByName(String name) {
+        return root.$x(".//div[contains(@class,'product-image-wrapper')][contains(.,'" + name + "')]");
     }
 }
 ```
@@ -47,51 +48,51 @@ public class UsersTable extends CustomWebElement {
 TypeScript DSL:
 
 ```ts
-export class UsersTableComponent extends xComponent {
-  readonly rows = this.$("tbody tr");
+export class ProductsCatalogComponent extends xComponent {
+  readonly cards = this.$(".product-image-wrapper");
 
-  rowByName(name: string): xLocator {
-    return this.rows.filter({ hasText: name }).first() as xLocator;
+  cardByName(name: string): xLocator {
+    return this.root.locator(".product-image-wrapper").filter({ hasText: name }).first() as xLocator;
   }
 }
 ```
 
-See the real implementation in `components/UsersTableComponent.ts`.
+See the real implementation in `pages/components/ProductsCatalogComponent.ts`.
 
 ## Specs Read Like Flows, Not Selector Scripts
 
 Representative Java original:
 
 ```java
-dashboardPage.searchUsers("Grace");
-assertEquals(usersTable.rowByName("Grace").status().getText(), "Pending");
+productsPage.searchProducts("Blue Top");
+assertEquals(productsCatalog.cardByName("Blue Top").getText(), "Blue Top");
 ```
 
 TypeScript DSL:
 
 ```ts
-await dashboardPage.searchUsers("Grace");
-await assertTextEquals(dashboardPage.usersTable.statusByName("Grace Hopper"), "Pending");
+await productsPage.searchProducts("Blue Top");
+await assertTextEquals(productsPage.catalog.productNameByName("Blue Top"), "Blue Top");
 ```
 
-See the real flows in `tests/ui/dashboard.spec.ts`.
+See the real flows in `tests/ui/products.spec.ts`.
 
 ## Assertion Batches Use `softGroup`
 
 Representative Java original:
 
 ```java
-softly.assertThat(details.name()).isEqualTo("Grace Hopper");
-softly.assertThat(details.role()).isEqualTo("Admin");
+softly.assertThat(product.name()).isEqualTo("Blue Top");
+softly.assertThat(product.brand()).contains("Polo");
 softly.assertAll();
 ```
 
 TypeScript DSL:
 
 ```ts
-await softGroup("selected user details", async () => {
-  await assertTextEquals(dashboardPage.detailsName, "Grace Hopper");
-  await assertTextEquals(dashboardPage.detailsRole, "Admin");
+await softGroup("blue top details", async () => {
+  await assertTextEquals(productDetailsPage.information.name, "Blue Top");
+  await assertTextContains(productDetailsPage.information.brand, "Polo");
 });
 ```
 

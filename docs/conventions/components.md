@@ -4,21 +4,19 @@ Reference for any code that creates or edits `xComponent` subclasses.
 
 ## Location
 
-Reusable components live in `components/`.
+Reusable components live in `pages/components/`.
 
 ## Template
 
 ```ts
-import { xComponent } from '../framework/core/xComponent';
+import { xComponent } from '../../framework/core/xComponent';
 
-export class LoginFormComponent extends xComponent {
-  readonly username = this.$('input[name="username"]');
-  readonly password = this.$('input[name="password"]');
-  readonly submit = this.$('button[type="submit"]');
+export class SubscriptionFooterComponent extends xComponent {
+  readonly email = this.root.getByPlaceholder('Your email address');
+  readonly submit = this.$('#subscribe');
 
-  async loginAs(user: string, pass: string): Promise<void> {
-    await this.username.fill(user);
-    await this.password.fill(pass);
+  async subscribeAs(address: string): Promise<void> {
+    await this.email.fill(address);
     await this.submit.click();
   }
 }

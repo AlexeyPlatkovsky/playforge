@@ -5,13 +5,13 @@ import { parseEnv } from "../../framework/config/schema";
 
 test("env parser accepts the documented baseline @unit", () => {
   const parsed = parseEnv({
-    BASE_URL: "http://127.0.0.1:3407",
+    BASE_URL: "https://automationexercise.com",
     HIGHLIGHT: "0",
     TEST_PASSWORD: "",
     TEST_USERNAME: "demo-user"
   });
 
-  expect(parsed.BASE_URL).toBe("http://127.0.0.1:3407");
+  expect(parsed.BASE_URL).toBe("https://automationexercise.com");
   expect(parsed.HIGHLIGHT).toBe("0");
   expect(parsed.TEST_PASSWORD).toBeUndefined();
   expect(parsed.TEST_USERNAME).toBe("demo-user");
@@ -19,7 +19,7 @@ test("env parser accepts the documented baseline @unit", () => {
 
 test("typed config converts flags and preserves credentials @unit", () => {
   const config = loadEnv({
-    BASE_URL: "http://127.0.0.1:3407",
+    BASE_URL: "https://automationexercise.com",
     HIGHLIGHT: "1",
     TEST_PASSWORD: "secret",
     TEST_USERNAME: "demo-user"
@@ -30,6 +30,8 @@ test("typed config converts flags and preserves credentials @unit", () => {
   expect(config.TEST_USERNAME).toBe("demo-user");
 });
 
-test("typed config fails fast on missing required values @unit", () => {
-  expect(() => loadEnv({ HIGHLIGHT: "0" })).toThrow(/BASE_URL/);
+test("typed config uses automationexercise as the default base url @unit", () => {
+  const config = loadEnv({ HIGHLIGHT: "0" });
+
+  expect(config.BASE_URL).toBe("https://automationexercise.com");
 });

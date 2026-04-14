@@ -16,11 +16,5 @@ export default defineConfig({
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
     video: "retain-on-failure"
-  },
-  webServer: {
-    command: "npm run app:serve",
-    reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
-    url: env.BASE_URL
   }
 });

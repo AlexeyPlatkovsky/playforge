@@ -26,6 +26,20 @@ For the bd command reference, run `bd prime`. This skill adds the project overla
   - bd's `bug`, `chore`, `decision` types are allowed when they fit better than `task`.
 - **Floor**: T0 work happens off-bead. Do not create a bead for a five-minute trivial edit.
 - **Ceiling**: a task that lists multiple distinct capabilities is too big. Promote to feature with child tasks.
+- **Embedded Dolt lock model**: this repo currently uses the embedded Dolt backend under `.beads/embeddeddolt`. Treat it as single-writer for agent work. Background Beads UI or status-watch processes can grab `.lock` and block `bd update` / `bd close`.
+- **No background watchers on embedded backend**: do not keep `beads-enhanced-ui`, long-lived `bd --sandbox show ...`, or similar repo-local bead watchers running while an agent is expected to write bead state. If concurrent access is required, move the project to the Dolt server backend instead of embedded Dolt.
+
+## Lock Preflight
+
+Before any bead write (`bd update`, `bd note`, `bd close`, create with side effects):
+
+1. Check whether another process holds the embedded Dolt lock:
+   ```
+   lsof +D .beads/embeddeddolt
+   ```
+2. If the lock is held by a background Beads UI, watcher, or stale helper process, stop that process before continuing.
+3. If the lock is held by an active user workflow you should not interrupt, stop and ask how to proceed.
+4. If this contention is expected to recur because multiple tools need live bead access, recommend switching the repo to the Dolt server backend.
 
 ## When This Skill Runs
 

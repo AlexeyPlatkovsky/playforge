@@ -25,7 +25,7 @@ Use this checklist when moving a Selenium or PageFactory flow into this reposito
 - Component patterns: `docs/conventions/components.md`
 - End-to-end authoring guide: `docs/guides/authoring-with-the-dsl.md`
 - Side-by-side examples: `docs/migration/custom-webelement-side-by-side.md`
-- Concrete TypeScript reference flow: `tests/ui/dashboard.spec.ts`
+- Concrete TypeScript reference flow: `tests/ui/products.spec.ts`
 
 ## Recommended Port Order
 

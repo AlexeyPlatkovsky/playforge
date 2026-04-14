@@ -15,7 +15,7 @@ npm install
 npx playwright install --with-deps chromium
 ```
 
-If you are not using the provided npm scripts, set `BASE_URL` before running Playwright because config validation is fail-fast.
+`BASE_URL` defaults to `https://automationexercise.com`. Override it only when you need to point the DSL at a different environment.
 
 ## Scripts
 
@@ -29,7 +29,7 @@ npm run report:html
 npm run report:allure
 ```
 
-The test scripts pin `BASE_URL=http://127.0.0.1:3407` and start a tiny local smoke app through Playwright's `webServer` hook.
+The browser suites target `https://automationexercise.com` by default and do not start a local demo site.
 
 ## Configuration
 
