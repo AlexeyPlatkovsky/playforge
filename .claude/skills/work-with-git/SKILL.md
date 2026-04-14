@@ -36,3 +36,4 @@ git symbolic-ref refs/remotes/origin/HEAD
 - Never pull, switch branches, or rewrite history automatically.
 - If the user explicitly requires `main`, stay there and do not create a side branch.
 - Keep commits focused and avoid unrelated files from a dirty worktree.
+- Create the branch only from origin/main, never from the current branch, to avoid propagating uncommitted changes (unless the user explicitly provided another instructions).
