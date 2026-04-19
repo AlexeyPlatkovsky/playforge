@@ -9,7 +9,7 @@ Work through each item in order. Stop and fix before moving on if any step fails
 
 - [ ] **Validation scope selected**: use `validate`
 - [ ] **Selected verification passes**: run the chosen checks or explain why they could not run
-- [ ] **Automation design review**: if `pages/`, `components/`, or `tests/ui/` changed materially, run `review-automation-code`
+- [ ] **Automation design review**: if `pages/`, `pages/components/`, `tests/ui/`, or `tests/framework/` changed materially, run `review-automation-code`
 - [ ] **No secrets**: no credentials or tokens introduced in tracked files
 - [ ] **Docs updated**: if behavior, setup, configuration, or workflow changed
 - [ ] **Scope clean**: no unrelated cleanup bundled in
@@ -30,15 +30,17 @@ Start the report with the selected workflow name on its own line:
 
 `Workflow: <workflow path>`
 
-Then present the completion report as a markdown table:
+Then present the completion report as a markdown table.
+
+Required columns:
 
 | Step | Skill or Subagent | Status | Evidence / Notes |
 |---|---|---|---|
-| Files changed | local implementation | completed | list created or updated paths |
-| Validation | `validate` | completed \| skipped \| blocked | commands run and pass/fail/skipped |
-| Automation review | `review-automation-code` or `n/a` | completed \| skipped \| blocked | findings summary or explicit reason not needed |
-| Workflow execution | selected workflow stages | completed \| skipped \| blocked | stages completed, skipped, or blocked |
-| Risks | local review | completed | assumptions, risks, and unverified areas |
-| Out-of-scope issues | local review | completed | issues noticed outside task scope, or `none` |
 
-A workflow may extend this list (e.g. `repair-test.md` adds failure-mode and re-run count). Never shrink it.
+Rules:
+
+- The `Step` rows must mirror the ordered steps from the selected workflow. Do not use a generic fixed row set.
+- Different tasks may require different rows. The report should reflect the actual chosen workflow and any relevant sub-workflow.
+- Keep the workflow order so the report reads as a contract check.
+- If a workflow step was not needed, include it and mark it `skipped` with the reason.
+- If a sub-workflow adds task-specific requirements, add rows for those steps too.

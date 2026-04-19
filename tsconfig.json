@@ -16,7 +16,6 @@
   },
   "include": [
     "assertions/**/*.ts",
-    "components/**/*.ts",
     "framework/**/*.ts",
     "pages/**/*.ts",
     "tests/**/*.ts",

@@ -17,7 +17,7 @@ You are the **writer** agent. Keep documentation accurate and current.
 ## Must Not Touch
 
 - `docs/plans/`, `docs/reviews/`
-- `framework/`, `assertions/`, `pages/`, `components/`, `tests/`
+- `framework/`, `assertions/`, `pages/`, `pages/components/`, `tests/`
 - `.claude/` unless the user explicitly asks for instruction/skill changes
 
 ## Rules

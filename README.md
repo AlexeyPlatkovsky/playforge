@@ -15,7 +15,7 @@ npm install
 npx playwright install --with-deps chromium
 ```
 
-If you are not using the provided npm scripts, set `BASE_URL` before running Playwright because config validation is fail-fast.
+`BASE_URL` defaults to `https://automationexercise.com`. Override it only when you need to point the DSL at a different environment.
 
 ## Scripts
 
@@ -29,12 +29,23 @@ npm run report:html
 npm run report:allure
 ```
 
-The test scripts pin `BASE_URL=http://127.0.0.1:3407` and start a tiny local smoke app through Playwright's `webServer` hook.
+The browser suites target `https://automationexercise.com` by default and do not start a local demo site.
 
 ## Configuration
 
 Environment parsing lives in [`framework/config`](./framework/config). Required and optional variables are documented in [`.env.example`](./.env.example).
 
+## CI
+
+GitHub Actions runs on code-oriented changes under the framework, pages, tests, package manifests, and related config files. The workflow keeps unit and UI suites separate, uploads Playwright and Allure artifacts for each suite, and posts a short PR summary table with result, execution time, and report links.
+
 ## Architecture
 
 The current project layout and the planned DSL layers are summarized in [docs/architecture/overview.md](./docs/architecture/overview.md).
+
+## Authoring And Migration
+
+- [Authoring with the DSL](./docs/guides/authoring-with-the-dsl.md)
+- [Selenium author migration checklist](./docs/migration/selenium-authors-checklist.md)
+- [Side-by-side migration examples](./docs/migration/custom-webelement-side-by-side.md)
+- [Hardening and readiness notes](./docs/architecture/hardening-and-readiness.md)

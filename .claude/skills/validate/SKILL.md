@@ -10,7 +10,8 @@ Inspect what changed first, then run the smallest meaningful verification and br
 | What changed | Commands to run |
 |---|---|
 | `framework/**` or `assertions/**` only | `npx tsc --noEmit`, `npx playwright test tests/unit`, `npx eslint .` |
-| `pages/**` or `components/**` only | `npx tsc --noEmit`, targeted `npx playwright test <relevant-ui-spec>`, `npx eslint .` |
+| `pages/**` or `pages/components/**` only | `npx tsc --noEmit`, targeted `npx playwright test <relevant-ui-spec>`, `npx eslint .` |
+| `tests/framework/**` only | `npx tsc --noEmit`, targeted `npx playwright test <relevant-framework-spec>` |
 | `tests/unit/**` only | `npx tsc --noEmit`, targeted `npx playwright test tests/unit` |
 | `tests/ui/**` only | `npx tsc --noEmit`, targeted `npx playwright test <relevant-ui-spec>` |
 | `eslint-plugin-xframework/**` only | `npx tsc --noEmit`, rule tests if present, `npx eslint .` |

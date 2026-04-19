@@ -1,6 +1,7 @@
 const js = require("@eslint/js");
 const globals = require("globals");
 const tseslint = require("typescript-eslint");
+const xframework = require("./eslint-plugin-xframework");
 
 module.exports = tseslint.config(
   {
@@ -44,6 +45,29 @@ module.exports = tseslint.config(
       globals: {
         ...globals.node
       }
+    }
+  },
+  {
+    files: ["tests/ui/**/*.ts", "tests/unit/**/*.ts"],
+    plugins: { xframework },
+    rules: {
+      "xframework/no-raw-locator-in-tests": "error",
+      "xframework/no-goto-outside-page-objects": "error"
+    }
+  },
+  {
+    files: ["pages/components/**/*.ts"],
+    plugins: { xframework },
+    rules: {
+      "xframework/no-page-locator-in-components": "error"
+    }
+  },
+  {
+    files: ["pages/**/*.ts"],
+    ignores: ["pages/components/**/*.ts"],
+    plugins: { xframework },
+    rules: {
+      "xframework/page-must-implement-is-opened": "error"
     }
   }
 );

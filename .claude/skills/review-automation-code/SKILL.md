@@ -1,6 +1,6 @@
 ---
 name: review-automation-code
-description: Review Playwright UI automation under `tests/ui/`, `pages/`, and `components/` for DSL boundary violations, page/component design, locator hygiene, and assertion quality. Use after creating, editing, or refactoring Playwright page objects, components, or UI tests.
+description: Review Playwright UI automation under `tests/ui/`, `tests/framework/`, `pages/`, and `pages/components/` for DSL boundary violations, page/component design, locator hygiene, and assertion quality. Use after creating, editing, or refactoring Playwright page objects, components, or browser-facing specs.
 ---
 
 # Review Automation Code
@@ -9,18 +9,19 @@ Review the changed automation code as a system, not file-by-file.
 
 ## Inputs
 
-- Read the changed UI specs and the pages/components they use.
+- Read the changed UI specs or framework browser specs and the pages/components they use.
 - Read relevant fixtures, assertions, and support helpers when the change touches shared setup, URLs, or credentials.
 - Source of truth:
   - `docs/conventions/page-objects.md`
   - `docs/conventions/components.md`
+  - `docs/guides/authoring-with-the-dsl.md`
   - `write-test`
   - `task-ready`
 
 ## What To Flag
 
 - **HIGH**: raw `page.locator`, `page.getByRole`, or `page.goto` in `tests/**`
-- **HIGH**: raw `page.locator` in `components/**`
+- **HIGH**: raw `page.locator` in `pages/components/**`
 - **HIGH**: page modeled as or extending `xComponent`
 - **HIGH**: raw `expect(...)` in tests when an assertion helper already exists
 - **HIGH**: hardcoded credentials or secrets

@@ -1,5 +1,6 @@
 import type { Locator } from "@playwright/test";
 
+import { highlightLocator } from "../reporting/highlight";
 import { xLogger } from "./xLogger";
 
 export interface LocatorMeta {
@@ -135,6 +136,7 @@ export function wrapLocator(locator: Locator, meta: LocatorMeta): xLocator {
       if (loggedActionMethods.has(prop)) {
         return async (...args: unknown[]) => {
           return await xLogger.step(actionTitle(prop, meta), async () => {
+            await highlightLocator(target);
             return await Promise.resolve(callable.apply(target, args));
           });
         };
