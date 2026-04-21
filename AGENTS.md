@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Canonical, vendor-neutral contract for any coding agent working in `custom_playwright` (Claude, Codex, Gemini, others). Vendor adapters under `.claude/`, `.gemini/`, etc. are thin wrappers; this file is the source of truth.
+Canonical, vendor-neutral contract for any coding agent working in `playforge` (Claude, Codex, Gemini, others). Vendor adapters under `.claude/`, `.gemini/`, etc. are thin wrappers; this file is the source of truth.
 
 ## Project Context
 
