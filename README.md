@@ -13,6 +13,7 @@ Strict TypeScript + Playwright foundation for a Component-DSL testing framework.
 nvm use
 npm install
 npx playwright install --with-deps chromium
+npm install -g @playwright/cli@latest
 ```
 
 `BASE_URL` defaults to `https://automationexercise.com`. Override it only when you need to point the DSL at a different environment.

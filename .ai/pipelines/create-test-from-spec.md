@@ -18,12 +18,18 @@ Do not use this pipeline for:
 ## Execution Sequence
 
 Stages execute sequentially. Each stage must complete its output contract before the next stage starts.
+Invoke each stage with the shared prompt templates in `.ai/docs/templates/pipeline-stage-prompts/`.
+Fill every required template field explicitly; do not rely on an agent to infer the spec, handoff blocks, or mode from surrounding conversation.
+
+Before invoking a stage, run the preflight in `.ai/docs/templates/pipeline-stage-prompts/README.md`.
+If required input is missing outside an intentional negative scenario, fix the prompt before starting the stage.
 
 ---
 
 ### Stage 1 — Explorer Agent
 
 **Agent:** `.ai/agents/explorer/AGENT.md`
+**Prompt template:** `.ai/docs/templates/pipeline-stage-prompts/explorer.md`
 
 **Input:** test specification + target page, component, or flow name
 
@@ -39,6 +45,7 @@ If the spec is ambiguous after inspection, the explorer must stop and surface th
 ### Stage 2 — Developer Agent
 
 **Agent:** `.ai/agents/developer/AGENT.md`
+**Prompt template:** `.ai/docs/templates/pipeline-stage-prompts/developer.md`
 
 **Input:** test specification + `EXPLORER OUTPUT` block from Stage 1
 
@@ -61,6 +68,7 @@ Developer must not hand off if any non-skipped check fails.
 ### Stage 3 — Test Reviewer Agent
 
 **Agent:** `.ai/agents/test-reviewer/AGENT.md`
+**Prompt template:** `.ai/docs/templates/pipeline-stage-prompts/test-reviewer.md`
 
 **Input:** `EXPLORER OUTPUT` block from Stage 1 + `DEVELOPER OUTPUT` block from Stage 2
 

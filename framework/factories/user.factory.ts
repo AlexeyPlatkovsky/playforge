@@ -1,5 +1,3 @@
-import { faker } from "@faker-js/faker";
-
 export interface UserData {
   name: string;
   email: string;
@@ -18,32 +16,66 @@ export interface UserData {
   birthYear: string;
 }
 
-export function buildUser(overrides: Partial<UserData> & { seed?: number } = {}): UserData {
-  if (overrides.seed !== undefined) {
-    faker.seed(overrides.seed);
+const FIRST_NAMES = ["Alex", "Jordan", "Taylor", "Morgan", "Casey", "Riley"];
+const LAST_NAMES = ["Smith", "Johnson", "Brown", "Davis", "Wilson", "Miller"];
+const STREETS = ["Main Street", "Market Street", "Oak Avenue", "Cedar Lane", "Maple Road", "Pine Drive"];
+const CITIES = ["Austin", "Seattle", "Denver", "Boston", "Chicago", "Phoenix"];
+const STATES = ["Texas", "Washington", "Colorado", "Massachusetts", "Illinois", "Arizona"];
+const COMPANIES = ["Playforge Labs", "Example Works", "Test Automation Co", "Quality Forge"];
+
+function createRandom(seed?: number): () => number {
+  if (seed === undefined) {
+    return Math.random;
   }
-  const firstName = overrides.firstName ?? faker.person.firstName();
-  const lastName = overrides.lastName ?? faker.person.lastName();
+
+  let state = seed >>> 0;
+  return () => {
+    state = (1664525 * state + 1013904223) >>> 0;
+    return state / 0x100000000;
+  };
+}
+
+function pick<T>(values: readonly T[], random: () => number): T {
+  const value = values[Math.floor(random() * values.length)];
+  if (value === undefined) {
+    throw new Error("Cannot pick from an empty values list");
+  }
+  return value;
+}
+
+function numberBetween(random: () => number, min: number, max: number): number {
+  return Math.floor(random() * (max - min + 1)) + min;
+}
+
+function alphaNumeric(random: () => number, length: number): string {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from({ length }, () => chars[numberBetween(random, 0, chars.length - 1)]).join("");
+}
+
+export function buildUser(overrides: Partial<UserData> & { seed?: number } = {}): UserData {
+  const random = createRandom(overrides.seed);
+  const firstName = overrides.firstName ?? pick(FIRST_NAMES, random);
+  const lastName = overrides.lastName ?? pick(LAST_NAMES, random);
   return {
     name: overrides.name ?? `${firstName} ${lastName}`,
     email:
       overrides.email ??
       (overrides.seed !== undefined
-        ? `playforge-${faker.string.alphanumeric(12)}@example.com`
-        : `playforge-${String(Date.now())}-${faker.string.alphanumeric(6)}@example.com`),
+        ? `playforge-${alphaNumeric(random, 12)}@example.com`
+        : `playforge-${String(Date.now())}-${alphaNumeric(random, 6)}@example.com`),
     password: overrides.password ?? "Playforge123!",
     firstName,
     lastName,
-    address: overrides.address ?? faker.location.streetAddress(),
-    city: overrides.city ?? faker.location.city(),
+    address: overrides.address ?? `${String(numberBetween(random, 100, 9999))} ${pick(STREETS, random)}`,
+    city: overrides.city ?? pick(CITIES, random),
     country: overrides.country ?? "United States",
-    state: overrides.state ?? faker.location.state(),
-    zipCode: overrides.zipCode ?? faker.location.zipCode(),
-    mobileNumber: overrides.mobileNumber ?? faker.phone.number({ style: "national" }),
-    company: overrides.company ?? faker.company.name(),
-    birthDay: overrides.birthDay ?? String(faker.number.int({ max: 28, min: 1 })),
-    birthMonth: overrides.birthMonth ?? String(faker.number.int({ max: 12, min: 1 })),
-    birthYear: overrides.birthYear ?? String(faker.number.int({ max: 2000, min: 1970 }))
+    state: overrides.state ?? pick(STATES, random),
+    zipCode: overrides.zipCode ?? String(numberBetween(random, 10000, 99999)),
+    mobileNumber: overrides.mobileNumber ?? `555${String(numberBetween(random, 1000000, 9999999))}`,
+    company: overrides.company ?? pick(COMPANIES, random),
+    birthDay: overrides.birthDay ?? String(numberBetween(random, 1, 28)),
+    birthMonth: overrides.birthMonth ?? String(numberBetween(random, 1, 12)),
+    birthYear: overrides.birthYear ?? String(numberBetween(random, 1970, 2000))
   };
 }
 

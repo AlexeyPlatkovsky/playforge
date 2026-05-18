@@ -50,7 +50,7 @@ If required UI elements, flows, states, or selectors cannot be reliably inferred
 Live UI exploration is allowed only to clarify missing information. 
 It must not become implementation.
 
-Explorer must use playwright-cli skill:
+Before live UI exploration, load `.ai/skills/playwright-cli/SKILL.md` and use that skill:
 - open the relevant page
 - inspect visible DOM structure
 - inspect roles, accessible names, text, labels, test ids, and stable attributes

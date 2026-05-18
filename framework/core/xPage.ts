@@ -4,6 +4,8 @@ import { env } from "../config/env";
 import { xComponent } from "./xComponent";
 import { isXLocator, type xLocator, wrapLocator } from "./xLocator";
 
+const consentHandlerPages = new WeakSet<Page>();
+
 export abstract class xPage {
   constructor(protected readonly page: Page) {
     queueMicrotask(() => {
@@ -14,6 +16,7 @@ export abstract class xPage {
   abstract readonly path: string;
 
   async open(): Promise<this> {
+    await this.installConsentDialogHandler();
     await this.page.goto(new URL(this.path, env.BASE_URL).toString());
     await this.isOpened();
     return this;
@@ -23,6 +26,21 @@ export abstract class xPage {
 
   protected $(selector: string): xLocator {
     return wrapLocator(this.page.locator(selector), { selector });
+  }
+
+  private async installConsentDialogHandler(): Promise<void> {
+    if (consentHandlerPages.has(this.page)) {
+      return;
+    }
+
+    consentHandlerPages.add(this.page);
+    await this.page.addLocatorHandler(
+      this.page.getByRole("dialog", { name: /This site asks for consent/i }),
+      async (dialog) => {
+        await dialog.getByRole("button", { name: "Consent" }).click();
+      },
+      { times: 1 }
+    );
   }
 
   private bindNames(): void {

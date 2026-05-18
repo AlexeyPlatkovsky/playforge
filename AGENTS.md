@@ -57,6 +57,7 @@ Shared capabilities under `.ai/`:
 | `bead-work` | `.ai/skills/bead-work/SKILL.md` | Issue tracking gate: find or propose a bead before significant work begins |
 | `branch-setup` | `.ai/skills/branch-setup/SKILL.md` | Git branch gate: decide whether a branch is needed, derive its name from the active bead, and create from `origin/main` |
 | `sync-manifesto` | `.ai/skills/sync-manifesto/SKILL.md` | Ensure `.manifesto/` exists and matches the latest agent-manifesto release; downloads and replaces if versions differ |
+| `playwright-cli` | `.ai/skills/playwright-cli/SKILL.md` | Live browser exploration with Playwright Agent CLI for Explorer when repository evidence is insufficient |
 | `documentation-maintenance` | `.ai/skills/documentation-maintenance/SKILL.md` | Update project docs after changes that affect behavior, interfaces, commands, architecture, or domain facts; runs before `task-complete` |
 
 Pipelines for repeated multi-step workflows:
@@ -79,7 +80,7 @@ Agents for specialized roles:
 
 Pipeline test system:
 
-- `.ai/tests/` — scenario cards, fixtures, and offline/online runners for the `create-test-from-spec` pipeline; see `.ai/tests/README.md`
+- `.ai/tests/` — drift-check scenario cards, fixtures, and offline/online runners for the `create-test-from-spec` pipeline; generated scenario artifacts must be cleaned after each run; see `.ai/tests/README.md`
 
 Shared conventions referenced by capabilities:
 

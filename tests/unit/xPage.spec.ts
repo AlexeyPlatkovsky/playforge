@@ -27,8 +27,16 @@ test("xPage navigates with base url and exposes wrapped page locators @unit", as
   expect(demo.opened).toBe(true);
   expect(isXLocator(demo.submit)).toBe(true);
   expect(demo.submit.__meta.selector).toBe("#submit");
-  expect(calls).toEqual([
-    { args: ["#submit"], method: "locator", target: "page" },
-    { args: ["https://automationexercise.com/login"], method: "goto", target: "page" }
+  expect(calls.map((call) => ({ method: call.method, target: call.target }))).toEqual([
+    { method: "locator", target: "page" },
+    { method: "getByRole", target: "page" },
+    { method: "addLocatorHandler", target: "page" },
+    { method: "goto", target: "page" }
   ]);
+  expect(calls[0]).toEqual({ args: ["#submit"], method: "locator", target: "page" });
+  expect(calls[3]).toEqual({
+    args: ["https://automationexercise.com/login"],
+    method: "goto",
+    target: "page"
+  });
 });

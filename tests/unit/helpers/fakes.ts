@@ -32,6 +32,10 @@ export function createFakeLocator(target: string, calls: RecordedCall[]): Locato
       calls.push({ args: [], method: "first", target });
       return createFakeLocator(`${target}.first()`, calls);
     },
+    getByRole: (role: string, options?: unknown) => {
+      calls.push({ args: [role, options], method: "getByRole", target });
+      return createFakeLocator(`${target} >> getByRole(${role})`, calls);
+    },
     focus: () => {
       calls.push({ args: [], method: "focus", target });
       return Promise.resolve();
@@ -68,6 +72,14 @@ export function createFakePage(calls: RecordedCall[]) {
   };
 
   const page = {
+    addLocatorHandler: (locator: Locator) => {
+      calls.push({ args: [locator], method: "addLocatorHandler", target: "page" });
+      return Promise.resolve();
+    },
+    getByRole: (role: string, options?: unknown) => {
+      calls.push({ args: [role, options], method: "getByRole", target: "page" });
+      return createFakeLocator(`page >> getByRole(${role})`, calls);
+    },
     goto: (url: string) => {
       calls.push({ args: [url], method: "goto", target: "page" });
       state.navigatedTo = url;

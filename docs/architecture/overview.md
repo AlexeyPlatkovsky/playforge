@@ -19,6 +19,7 @@ This repository implements a strict Playwright Component-DSL and keeps the autho
 ## Reference flows
 
 - `https://automationexercise.com/` is the live target used by the browser suites.
+- `xPage.open()` installs a one-time handler for the live target's consent dialog so page readiness checks and DSL interactions are not blocked by the overlay.
 - `pages/HomePage.ts`, `pages/ProductsPage.ts`, `pages/ProductDetailsPage.ts`, and `tests/ui/products.spec.ts` are the reference examples for nested components, parameterized locators, and assertion-helper usage.
 - `docs/guides/authoring-with-the-dsl.md` and `docs/migration/*.md` explain how to apply the same patterns in new specs.
 - `docs/architecture/hardening-and-readiness.md` records the repeated browser run, proxy benchmark, and deferred-item decisions.
