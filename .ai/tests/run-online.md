@@ -3,6 +3,9 @@
 Runs pipeline scenarios with real AI agents and a live browser. `npm run test:ui` executes in Stage 2 - the generated test must pass against the live automationexercise.com site.
 
 This runner is a pipeline drift check. Generated files are disposable scenario artifacts and must be cleaned after each scenario.
+Runs pipeline scenarios with real AI agents and a live browser. `npm run test:ui` executes in Stage 2 - the generated test must pass against the live automationexercise.com site.
+
+This runner is a pipeline drift check. Generated files are disposable scenario artifacts and must be cleaned after each scenario.
 
 ## Prerequisites
 
@@ -20,8 +23,34 @@ The DEVELOPER OUTPUT block must include:
 
 ```text
 Browser verification - passed
+```text
+Browser verification - passed
 ```
 
+or `failed` with the test output if the suite does not pass.
+
+## Stage Invocation Templates
+
+Use the shared templates in `.ai/docs/templates/pipeline-stage-prompts/` for every stage invocation:
+
+- Stage 1: `.ai/docs/templates/pipeline-stage-prompts/explorer.md`
+- Stage 2: `.ai/docs/templates/pipeline-stage-prompts/developer.md`
+- Stage 3: `.ai/docs/templates/pipeline-stage-prompts/test-reviewer.md`
+
+Before starting a stage, run the preflight in `.ai/docs/templates/pipeline-stage-prompts/README.md`.
+Fill every template field explicitly; do not rely on an agent to infer the spec, handoff blocks, or mode from surrounding conversation.
+
+## Common Scenario Harness
+
+For every scenario:
+
+1. Record baseline `git status --short`.
+2. Follow the scenario card and runner steps.
+3. Apply the scenario card's cleanup requirement.
+4. Compare final `git status --short` with the baseline.
+5. Record `FAIL` if any scenario-created or scenario-modified file remains.
+
+Do not clean unrelated pre-existing worktree changes.
 or `failed` with the test output if the suite does not pass.
 
 ## Stage Invocation Templates
@@ -68,6 +97,11 @@ Scenarios 01, 05, and 10-12 are the primary online targets - they require a full
 ### 01 - Happy Path (Online)
 
 1. Load scenario: `.ai/tests/scenarios/01-happy-path.md`
+2. Invoke Stage 1 (explorer) with the explorer template, the scenario path, the spec from the scenario card, target `Products page search flow`, mode `online`, and injected fixtures `none`.
+3. Invoke Stage 2 (developer) with the developer template, the scenario path, the spec, the complete EXPLORER OUTPUT, reviewer findings `none`, and the online mode instruction above.
+4. Invoke Stage 3 (reviewer) with the reviewer template, the scenario path, the spec, the complete EXPLORER OUTPUT, the complete DEVELOPER OUTPUT, revision cycle `none`, and injected fixtures `none`.
+5. Check: `npm run test:ui - passed` appears in DEVELOPER OUTPUT. Reviewer verdict is `Approve` or `Approve with minor fixes`.
+6. Clean scenario changes listed in the scenario card.
 2. Invoke Stage 1 (explorer) with the explorer template, the scenario path, the spec from the scenario card, target `Products page search flow`, mode `online`, and injected fixtures `none`.
 3. Invoke Stage 2 (developer) with the developer template, the scenario path, the spec, the complete EXPLORER OUTPUT, reviewer findings `none`, and the online mode instruction above.
 4. Invoke Stage 3 (reviewer) with the reviewer template, the scenario path, the spec, the complete EXPLORER OUTPUT, the complete DEVELOPER OUTPUT, revision cycle `none`, and injected fixtures `none`.
@@ -135,5 +169,7 @@ Scenarios 01, 05, and 10-12 are the primary online targets - they require a full
 | 12 | | | |
 
 Results: `PASS`, `FAIL`, or `SKIP` (with reason). Browser result: `passed`, `failed`, or `skipped`.
+
+Record cleanup status in `Notes`. Use `FAIL` if cleanup cannot restore the pre-scenario status without touching unrelated work.
 
 Record cleanup status in `Notes`. Use `FAIL` if cleanup cannot restore the pre-scenario status without touching unrelated work.
