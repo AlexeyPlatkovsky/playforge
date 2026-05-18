@@ -49,12 +49,15 @@ Do not clean unrelated pre-existing worktree changes.
 
 ## Scenarios Suited for Online Mode
 
-Scenarios 01 and 05 are the primary online targets - they require a full browser run to confirm the generated test is functionally correct. Behavioral scenarios (02-04, 07-09) do not benefit from a browser run because they test pipeline behavior, not test correctness.
+Scenarios 01, 05, and 10-12 are the primary online targets - they require a full browser run to confirm the generated test is functionally correct. Behavioral scenarios (02-04, 07-09) do not benefit from a browser run because they test pipeline behavior, not test correctness.
 
 | Scenario | Online value |
 |---|---|
 | 01 - Happy path | High - confirms generated test is green |
 | 05 - No existing context | High - confirms new page object and spec are functional |
+| 10 - Search result opens product details | High - confirms multi-step search-to-details behavior |
+| 11 - Brand filter opens product details | High - confirms sidebar, catalog, and details-page reuse |
+| 12 - Product details subscription | High - confirms cross-page footer component reuse |
 | 06 - Raw locator violation | Low - ESLint fires before browser; result is the same as offline |
 | 07 - Needs revision loop | Low - behavioral, not test correctness |
 | 08 - Max revision cycles | Low - behavioral |
@@ -85,12 +88,51 @@ Scenarios 01 and 05 are the primary online targets - they require a full browser
 
 ---
 
+### 10 - Search Result Opens Product Details (Online)
+
+1. If `tests/ui/products.spec.ts` has pre-existing uncommitted changes before the scenario, mark `SKIP` with reason `dirty scenario target`.
+2. Load scenario: `.ai/tests/scenarios/10-search-to-details-online.md`
+3. Invoke Stage 1 (explorer) with the explorer template, the scenario path, the spec from the scenario card, target `Products search to product details flow`, mode `online`, and injected fixtures `none`.
+4. Invoke Stage 2 (developer) with the developer template, the scenario path, the spec, the complete EXPLORER OUTPUT, reviewer findings `none`, and the online mode instruction above.
+5. Invoke Stage 3 (reviewer) with the reviewer template, the scenario path, the spec, the complete EXPLORER OUTPUT, the complete DEVELOPER OUTPUT, revision cycle `none`, and injected fixtures `none`.
+6. Check: `npm run test:ui - passed` appears in DEVELOPER OUTPUT. Reviewer verdict is `Approve` or `Approve with minor fixes`.
+7. Restore `tests/ui/products.spec.ts` to its pre-scenario state.
+
+---
+
+### 11 - Brand Filter Opens Product Details (Online)
+
+1. If `tests/ui/products.spec.ts` has pre-existing uncommitted changes before the scenario, mark `SKIP` with reason `dirty scenario target`.
+2. Load scenario: `.ai/tests/scenarios/11-brand-filter-to-details-online.md`
+3. Invoke Stage 1 (explorer) with the explorer template, the scenario path, the spec from the scenario card, target `Products brand filter to product details flow`, mode `online`, and injected fixtures `none`.
+4. Invoke Stage 2 (developer) with the developer template, the scenario path, the spec, the complete EXPLORER OUTPUT, reviewer findings `none`, and the online mode instruction above.
+5. Invoke Stage 3 (reviewer) with the reviewer template, the scenario path, the spec, the complete EXPLORER OUTPUT, the complete DEVELOPER OUTPUT, revision cycle `none`, and injected fixtures `none`.
+6. Check: `npm run test:ui - passed` appears in DEVELOPER OUTPUT. Reviewer verdict is `Approve` or `Approve with minor fixes`.
+7. Restore `tests/ui/products.spec.ts` to its pre-scenario state.
+
+---
+
+### 12 - Product Details Subscription (Online)
+
+1. If `tests/ui/products.spec.ts` has pre-existing uncommitted changes before the scenario, mark `SKIP` with reason `dirty scenario target`.
+2. Load scenario: `.ai/tests/scenarios/12-details-subscription-online.md`
+3. Invoke Stage 1 (explorer) with the explorer template, the scenario path, the spec from the scenario card, target `Product details footer subscription flow`, mode `online`, and injected fixtures `none`.
+4. Invoke Stage 2 (developer) with the developer template, the scenario path, the spec, the complete EXPLORER OUTPUT, reviewer findings `none`, and the online mode instruction above.
+5. Invoke Stage 3 (reviewer) with the reviewer template, the scenario path, the spec, the complete EXPLORER OUTPUT, the complete DEVELOPER OUTPUT, revision cycle `none`, and injected fixtures `none`.
+6. Check: `npm run test:ui - passed` appears in DEVELOPER OUTPUT. Reviewer verdict is `Approve` or `Approve with minor fixes`.
+7. Restore `tests/ui/products.spec.ts` to its pre-scenario state.
+
+---
+
 ## Recording Results
 
 | Scenario | Result | Browser result | Notes |
 |---|---|---|---|
 | 01 | | | |
 | 05 | | | |
+| 10 | | | |
+| 11 | | | |
+| 12 | | | |
 
 Results: `PASS`, `FAIL`, or `SKIP` (with reason). Browser result: `passed`, `failed`, or `skipped`.
 

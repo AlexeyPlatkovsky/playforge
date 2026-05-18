@@ -56,6 +56,9 @@ Never clean unrelated pre-existing worktree changes.
 | 07 | Reviewer returns Needs revision, developer fixes | Edge case | yes | no |
 | 08 | Two failed revision cycles - pipeline escalates | Edge case | yes | no |
 | 09 | Reviewer rejects - back to Stage 1 | Negative | yes | no |
+| 10 | Search result opens product details | Online complexity | no | yes |
+| 11 | Brand filter opens product details | Online complexity | no | yes |
+| 12 | Product details subscription | Online complexity | no | yes |
 
 ## Fixtures
 
