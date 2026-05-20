@@ -1,0 +1,1 @@
+INFO: Click on catalog.locator(.product-image-wrapper).filter({"hasText":"Blue Top"}).first().locator(a[href*='/product_details/']).first() (.features_items >> locator(.product-image-wrapper) >> filter({"hasText":"Blue Top"}) >> first() >> locator(a[href*='/product_details/']) >> first())
