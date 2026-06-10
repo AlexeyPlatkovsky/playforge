@@ -1,0 +1,1 @@
+INFO: Click on brands.locator(a).filter({"hasText":"Polo"}).first() (.brands_products >> locator(a) >> filter({"hasText":"Polo"}) >> first())
