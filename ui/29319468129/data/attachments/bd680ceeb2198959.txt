@@ -1,0 +1,4 @@
+INFO: Click on signupLogin (a[href='/login'])
+INFO: Fill on loginEmail ([data-qa='login-email'])
+INFO: Fill on loginPassword ([data-qa='login-password'])
+INFO: Click on loginButton ([data-qa='login-button'])
